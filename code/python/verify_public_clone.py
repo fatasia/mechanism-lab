@@ -1,6 +1,7 @@
 """干净Git克隆验收：复用依赖环境，但代码/数据/训练/服务/备份全部在新克隆中。"""
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -12,10 +13,12 @@ from pathlib import Path
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
+from service_process import stop_service
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def run(destination):
+def run(destination, archive=None, archive_sha256=None):
     destination = destination.resolve()
     if destination.exists():
         raise ValueError("验收目标已存在；不覆盖工作区")
@@ -75,6 +78,13 @@ def run(destination):
     command(
         "frontend-build", [shutil.which("npm.cmd") or "npm", "run", "build"], frontend
     )
+    if archive is not None:
+        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+        if not archive_sha256 or digest != archive_sha256:
+            raise ValueError("缓存公开归档哈希不符")
+        cached = destination / "data/raw/uci-hydraulic/dataset.zip"
+        cached.parent.mkdir(parents=True)
+        shutil.copyfile(archive, cached)
     command("public-download", [sys.executable, "code/python/download_hydraulic.py"])
     command(
         "smoke-train",
@@ -261,8 +271,7 @@ def run(destination):
                 ],
             )
             assert int(count) == 3
-            server.terminate()
-            server.wait(timeout=15)
+            stop_service(server)
             env["MECHANISM_RUNTIME_DB"] = str(restored)
             server = subprocess.Popen(
                 [sys.executable, "code/python/serve_demo.py", "--port", str(port)],
@@ -284,6 +293,10 @@ def run(destination):
             recovered = request("/api/runtime/predict", body)
             assert recovered["duplicate"] and recovered["status"] == "unscored"
             assert len(request("/api/runtime/history?entity=clean-smoke")) == 3
+            assert (
+                request("/api/runtime/monitor")["process"]["pid"]
+                != monitor["process"]["pid"]
+            )
             print(
                 json.dumps(
                     {"clean_step": "restored-service-idempotency", "passed": True}
@@ -291,12 +304,7 @@ def run(destination):
                 flush=True,
             )
         finally:
-            server.terminate()
-            try:
-                server.wait(timeout=15)
-            except subprocess.TimeoutExpired:
-                server.kill()
-                server.wait()
+            stop_service(server)
     assert "smoke-query-canary" not in server_log.read_text(encoding="utf-8")
     report = {
         "status": "passed",
@@ -305,6 +313,9 @@ def run(destination):
             ["git", "rev-parse", "HEAD"], cwd=destination, text=True
         ).strip(),
         "scope": "clean code/data/artifacts; reused installed dependencies, not clean OS installation; two-epoch smoke NOT model performance",
+        "public_archive": "checksum-verified local cache, freshly prepared"
+        if archive
+        else "fresh official download",
         "module_origins": origin,
         "replay_windows": len(replay["scores"]),
         "restored_predictions": int(count),
@@ -321,4 +332,7 @@ def run(destination):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--destination", type=Path, required=True)
-    run(parser.parse_args().destination)
+    parser.add_argument("--archive", type=Path)
+    parser.add_argument("--archive-sha256")
+    args = parser.parse_args()
+    run(args.destination, args.archive, args.archive_sha256)
