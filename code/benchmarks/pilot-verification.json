@@ -38,10 +38,10 @@
     "production_data_used": false
   },
   "ci": {
-    "url": "https://github.com/fatasia/mechanism-lab/actions/runs/41439833738",
-    "source_commit": "d73d84cfe9786c4c7d7a458da4f6683a7a860aa7",
+    "url": "https://github.com/fatasia/mechanism-lab/actions/runs/41440544379",
+    "source_commit": "f996ac181e8aa376fe78b5586f94874b6d719d9a",
     "status": "success",
-    "tests": 219,
+    "tests": 220,
     "scope": "Windows Python3.12 clean dependency installation; Ubuntu Node24 frontend build"
   },
   "long_soak": {
@@ -50,5 +50,9 @@
     "started_utc": "2026-11-02T11:41:50.910159+00:00",
     "source_commit": "56baa7eb7fdbf878a760bef92f7b7484367c99f2",
     "note": "static publication snapshot, consult local progress and process state; no automatic cloud monitor"
-  }
+  },
+  "known_warnings": [
+    "Starlette/httpx TestClient deprecation",
+    "GitHub Actions older Node20 action runtime migrated by runner to Node24"
+  ]
 }
