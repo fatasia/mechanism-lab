@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phm-algorithms"
+version = "0.4.0"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+infer = ["onnxruntime"]
+train = ["scipy", "scikit-learn", "torch", "onnx", "onnxruntime", "skl2onnx", "pillow", "h5py"]
+test = ["pytest", "cryptography>=50.0.2"]
+demo = ["fastapi", "uvicorn", "httpx", "scipy"]
+security = ["cryptography>=50.0.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["phm_core", "phm_demo", "phm_runtime"]

@@ -1,0 +1,33 @@
+# 本仓库只版本管理代码及必要的工程入口；资料、数据和运行产物留在本地。
+/docs/
+/references/
+/data/
+/work/
+/outputs/
+
+**/__pycache__/
+**/*.egg-info/
+**/*.py[cod]
+**/.venv/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.coverage
+**/htmlcov/
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+**/.vite/
+**/*.tsbuildinfo
+**/.env
+**/.env.local
+**/.env.*.local
+**/*.log
+.DS_Store
+Thumbs.db
+
+# 签名私钥、认证文件与本机密钥目录不进入发布。
+**/*.pem
+**/*.key
+**/secrets/
