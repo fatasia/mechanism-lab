@@ -35,6 +35,7 @@ def run(destination):
     }
     for key in (
         "MECHANISM_TRUSTED_MODEL_KEY",
+        "MECHANISM_TRUSTED_MODEL_KEYS",
         "MECHANISM_RUNTIME_DB",
         "MECHANISM_SIGNING_PASSWORD",
     ):
@@ -260,6 +261,35 @@ def run(destination):
                 ],
             )
             assert int(count) == 3
+            server.terminate()
+            server.wait(timeout=15)
+            env["MECHANISM_RUNTIME_DB"] = str(restored)
+            server = subprocess.Popen(
+                [sys.executable, "code/python/serve_demo.py", "--port", str(port)],
+                cwd=destination,
+                env=env,
+                stdout=stream,
+                stderr=subprocess.STDOUT,
+            )
+            for _ in range(80):
+                try:
+                    request("/api/health")
+                    break
+                except (URLError, OSError):
+                    if server.poll() is not None:
+                        raise RuntimeError("恢复库服务提前退出")
+                    time.sleep(0.25)
+            else:
+                raise TimeoutError("恢复库服务未就绪")
+            recovered = request("/api/runtime/predict", body)
+            assert recovered["duplicate"] and recovered["status"] == "unscored"
+            assert len(request("/api/runtime/history?entity=clean-smoke")) == 3
+            print(
+                json.dumps(
+                    {"clean_step": "restored-service-idempotency", "passed": True}
+                ),
+                flush=True,
+            )
         finally:
             server.terminate()
             try:
@@ -278,6 +308,7 @@ def run(destination):
         "module_origins": origin,
         "replay_windows": len(replay["scores"]),
         "restored_predictions": int(count),
+        "restored_service_idempotency": True,
         "sync_missing": unsupported["status"],
         "sync_aligned": supported["status"],
         "http_requests": monitor["http"]["requests"],

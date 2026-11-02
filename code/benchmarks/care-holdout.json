@@ -1,0 +1,717 @@
+{
+  "run_id": "20261102T112826Z-91c87fa8",
+  "protocol": {
+    "methods": [
+      "pca",
+      "regime_pca",
+      "cusum"
+    ],
+    "quantile": 0.995,
+    "fit_fraction": 0.7,
+    "components": 8,
+    "regimes": 4,
+    "seed": 42,
+    "chance_draws": 1000,
+    "normal_budget_per_1000h": 1.0,
+    "scope": "unseen assets relative to pilot, but per-asset normal training is provided; not zero-shot",
+    "comparison": "all fixed methods, no test-selected winner; equal source quantile is NOT equal target false alarm rate"
+  },
+  "cases": [
+    {
+      "file": "A-68.csv",
+      "farm": "A",
+      "asset_id": "11",
+      "event_label": "anomaly",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 0.5847941966662246,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 382.5,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": null,
+          "chance_mean_detected": 0.0
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 1.9946360473466558,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            213.66666666668607
+          ],
+          "warning_episodes": 5,
+          "matched_episodes": 4,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 382.5,
+          "false_episodes_per_1000h": 2.6143790849673203,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "cusum",
+          "threshold": 6.677378017885262,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            213.66666666668607
+          ],
+          "warning_episodes": 4,
+          "matched_episodes": 4,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 382.5,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        }
+      ]
+    },
+    {
+      "file": "B-27.csv",
+      "farm": "B",
+      "asset_id": "7",
+      "event_label": "anomaly",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 0.9456261924081973,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            1066.666666666686
+          ],
+          "warning_episodes": 3,
+          "matched_episodes": 3,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 1656.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 2.3106744253724756,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            1066.5
+          ],
+          "warning_episodes": 3,
+          "matched_episodes": 1,
+          "false_episodes": 1,
+          "ambiguous_episodes": 1,
+          "exposure_hours": 1656.1666666666667,
+          "false_episodes_per_1000h": 0.6038039649793701,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "cusum",
+          "threshold": 623.8782161535617,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 1,
+          "matched_episodes": 0,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 1656.1666666666667,
+          "false_episodes_per_1000h": 0.6038039649793701,
+          "normal_hours": null,
+          "chance_mean_detected": 0.887
+        }
+      ]
+    },
+    {
+      "file": "B-34.csv",
+      "farm": "B",
+      "asset_id": "14",
+      "event_label": "anomaly",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 0.9711232432681833,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 1,
+          "matched_episodes": 0,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 672.1666666666666,
+          "false_episodes_per_1000h": 1.4877262583684603,
+          "normal_hours": null,
+          "chance_mean_detected": 0.792
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 2.5621003884676394,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 1,
+          "matched_episodes": 0,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 672.1666666666666,
+          "false_episodes_per_1000h": 1.4877262583684603,
+          "normal_hours": null,
+          "chance_mean_detected": 0.792
+        },
+        {
+          "method": "cusum",
+          "threshold": 7358.364515950304,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 672.1666666666666,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": null,
+          "chance_mean_detected": 0.0
+        }
+      ]
+    },
+    {
+      "file": "B-82.csv",
+      "farm": "B",
+      "asset_id": "5",
+      "event_label": "normal",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 1.2062029898774778,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 288.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 288.1666666666667,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 2.680144450043358,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 288.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 288.1666666666667,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "cusum",
+          "threshold": 999.5810571613553,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 288.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 288.1666666666667,
+          "chance_mean_detected": null
+        }
+      ]
+    },
+    {
+      "file": "B-83.csv",
+      "farm": "B",
+      "asset_id": "2",
+      "event_label": "normal",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 9.014712996272184,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 2184.1666666666665,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 2184.1666666666665,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 21.555298891832322,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 2184.1666666666665,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 2184.1666666666665,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "cusum",
+          "threshold": 5657.336189189974,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 2184.1666666666665,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 2184.1666666666665,
+          "chance_mean_detected": null
+        }
+      ]
+    },
+    {
+      "file": "C-9.csv",
+      "farm": "C",
+      "asset_id": "55",
+      "event_label": "anomaly",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 8.166214447011217,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            447.66666666668607
+          ],
+          "warning_episodes": 5,
+          "matched_episodes": 4,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 578.1666666666666,
+          "false_episodes_per_1000h": 1.7296050735082158,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 5.332428201444522,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            447.66666666668607
+          ],
+          "warning_episodes": 7,
+          "matched_episodes": 6,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 578.1666666666666,
+          "false_episodes_per_1000h": 1.7296050735082158,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "cusum",
+          "threshold": 4865.314447137129,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 1,
+          "matched_episodes": 0,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 578.1666666666666,
+          "false_episodes_per_1000h": 1.7296050735082158,
+          "normal_hours": null,
+          "chance_mean_detected": 0.885
+        }
+      ]
+    },
+    {
+      "file": "C-11.csv",
+      "farm": "C",
+      "asset_id": "43",
+      "event_label": "anomaly",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 16.195868914659563,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            526.0
+          ],
+          "warning_episodes": 9,
+          "matched_episodes": 5,
+          "false_episodes": 4,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 670.1666666666666,
+          "false_episodes_per_1000h": 5.968664511315594,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 7.1282879523545795,
+          "events": 1,
+          "detected": 1,
+          "recall": 1.0,
+          "recall_interval_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "lead_hours": [
+            526.0
+          ],
+          "warning_episodes": 9,
+          "matched_episodes": 5,
+          "false_episodes": 3,
+          "ambiguous_episodes": 1,
+          "exposure_hours": 670.1666666666666,
+          "false_episodes_per_1000h": 4.476498383486695,
+          "normal_hours": null,
+          "chance_mean_detected": 1.0
+        },
+        {
+          "method": "cusum",
+          "threshold": 28159.876247642114,
+          "events": 1,
+          "detected": 0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.975
+          ],
+          "lead_hours": [],
+          "warning_episodes": 1,
+          "matched_episodes": 0,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 670.1666666666666,
+          "false_episodes_per_1000h": 1.4921661278288985,
+          "normal_hours": null,
+          "chance_mean_detected": 0.772
+        }
+      ]
+    },
+    {
+      "file": "C-8.csv",
+      "farm": "C",
+      "asset_id": "50",
+      "event_label": "normal",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 6.842195348398882,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 325.6666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 325.6666666666667,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 4.665105940914844,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 325.6666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 325.6666666666667,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "cusum",
+          "threshold": 11176.110757787663,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 1,
+          "matched_episodes": 0,
+          "false_episodes": 1,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 325.6666666666667,
+          "false_episodes_per_1000h": 3.0706243602865912,
+          "normal_hours": 325.6666666666667,
+          "chance_mean_detected": null
+        }
+      ]
+    },
+    {
+      "file": "C-29.csv",
+      "farm": "C",
+      "asset_id": "13",
+      "event_label": "normal",
+      "unscored_prediction_hours": 0.0,
+      "results": [
+        {
+          "method": "pca",
+          "threshold": 6.549634939210822,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 336.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 336.1666666666667,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "regime_pca",
+          "threshold": 3.846690526349519,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 336.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 336.1666666666667,
+          "chance_mean_detected": null
+        },
+        {
+          "method": "cusum",
+          "threshold": 3474.7115871503484,
+          "events": 0,
+          "detected": 0,
+          "recall": null,
+          "recall_interval_95": [
+            0.0,
+            1.0
+          ],
+          "lead_hours": [],
+          "warning_episodes": 0,
+          "matched_episodes": 0,
+          "false_episodes": 0,
+          "ambiguous_episodes": 0,
+          "exposure_hours": 336.1666666666667,
+          "false_episodes_per_1000h": 0.0,
+          "normal_hours": 336.1666666666667,
+          "chance_mean_detected": null
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "method": "pca",
+      "detected": 3,
+      "fault_assets": 5,
+      "normal_hours": 3134.1666666666665,
+      "normal_alerts": 0,
+      "normal_alerts_per_1000h": 0.0,
+      "within_prespecified_normal_budget": true,
+      "chance_expected_hits": 3.792,
+      "randomization_p_one_sided": 1.0,
+      "p_bonferroni_three_methods": 1,
+      "leads_h": [
+        1066.666666666686,
+        447.66666666668607,
+        526.0
+      ]
+    },
+    {
+      "method": "regime_pca",
+      "detected": 4,
+      "fault_assets": 5,
+      "normal_hours": 3134.1666666666665,
+      "normal_alerts": 0,
+      "normal_alerts_per_1000h": 0.0,
+      "within_prespecified_normal_budget": true,
+      "chance_expected_hits": 4.792,
+      "randomization_p_one_sided": 1.0,
+      "p_bonferroni_three_methods": 1,
+      "leads_h": [
+        213.66666666668607,
+        1066.5,
+        447.66666666668607,
+        526.0
+      ]
+    },
+    {
+      "method": "cusum",
+      "detected": 1,
+      "fault_assets": 5,
+      "normal_hours": 3134.1666666666665,
+      "normal_alerts": 1,
+      "normal_alerts_per_1000h": 0.3190640787024727,
+      "within_prespecified_normal_budget": true,
+      "chance_expected_hits": 3.544,
+      "randomization_p_one_sided": 1.0,
+      "p_bonferroni_three_methods": 1,
+      "leads_h": [
+        213.66666666668607
+      ]
+    }
+  ],
+  "source_sha256": "78baf05ee6866e8200c3afdf431e7cefc48eea23dd692ed149c0186d4f3d8306",
+  "source_hash": "14c8cb64d6c99d012e301c52d3e88ca9bd02538e52bc1b4b43292ce45b11898e",
+  "limitations": "9 asset case-control sample; circular shifts preserve point count, not necessarily time episode count across gaps; post-maintenance benefits unmeasured; not official CARE score",
+  "metrics_sha256": "c783443e38123dae67cded7dc6e75a8afb74e5cdd8a09341448e600703d30431",
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Christian Gück, Cyriana Roelofs; https://zenodo.org/records/15846963; subset selection, feature processing and custom evaluation by Mechanism Lab",
+  "editorial_correction": "Original limitations text used a 12-asset placeholder; actual frozen set contains 9 assets. No metric changed."
+}

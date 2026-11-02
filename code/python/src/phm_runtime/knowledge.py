@@ -3,7 +3,7 @@
 import re
 from pathlib import Path
 
-DOCUMENTS = ("OPERATIONS.md", "RESULTS.md", "PUBLIC_BENCHMARKS.md")
+DOCUMENTS = ("OPERATIONS.md", "RESULTS.md", "PUBLIC_BENCHMARKS.md", "PUBLIC_PILOT.md")
 
 
 def terms(text):

@@ -25,6 +25,7 @@
 | [实验复现](code/EXPERIMENTS.md) | 冻结协议、独立研究和运行命令 |
 | [结果与适用范围](code/RESULTS.md) | 已有证据、失败结果与未通过项 |
 | [公开数据补强](code/PUBLIC_BENCHMARKS.md) | 事件敏感性、工况拒识、CARE 预警与极片厚度回归 |
+| [公开数据试点包](code/PUBLIC_PILOT.md) | 未见资产测试、可靠性、维修证据与实际交付范围 |
 | [运行维护](code/OPERATIONS.md) | 同步契约、签名、日志、监控、备份与恢复 |
 | [数据来源](code/SOURCES.md) / [第三方声明](code/THIRD_PARTY_NOTICES.md) | 署名、数据许可与分发范围 |
 
