@@ -21,6 +21,13 @@ type Order = {
   cause: string;
   verification: string;
 };
+type Evidence = {
+  order: Order;
+  event: { id: number; entity: string; version: string; verdict: string | null } | null;
+  prediction_total: number;
+  truncated: boolean;
+  asset_event_identity_matches: boolean | null;
+};
 type Plan = {
   id: number;
   asset_id: string;
@@ -140,6 +147,17 @@ export function Maintenance() {
   );
   const [assetEdit, setAssetEdit] = useState(0);
   const [assetQuery, setAssetQuery] = useState("");
+  const [evidence, setEvidence] = useState<Evidence | null>(null);
+  useEffect(() => { setEvidence(null); }, [order?.id, order?.revision]);
+  async function loadEvidence() {
+    if (!order) return;
+    setBusy(true);
+    setError("");
+    try {
+      setEvidence(await request<Evidence>(`/api/maintenance/orders/${order.id}/evidence`));
+    } catch (e) { setError(String(e)); }
+    finally { setBusy(false); }
+  }
   async function refresh(signal?: AbortSignal) {
     const next = await request<Snapshot>("/api/maintenance", {
       signal: AbortSignal.any([
@@ -456,6 +474,18 @@ export function Maintenance() {
                   <h2>
                     工单 {order.id} · {states[order.status]}
                   </h2>
+                  <button type="button" disabled={busy} onClick={() => void loadEvidence()}>
+                    查看告警证据
+                  </button>
+                  {evidence && evidence.order.id === order.id && (
+                    <div className="callout" role="status">
+                      <strong>{evidence.event ? `关联告警 #${evidence.event.id}` : "未关联告警"}</strong>
+                      <p>模型版本：{evidence.event?.version ?? "无"} · 记录 {evidence.prediction_total} 条{evidence.truncated ? "（证据包仅含前 1,000 条）" : ""}</p>
+                      {evidence.asset_event_identity_matches === false && <p>工单设备与告警实体不同，请核对关联关系。</p>}
+                      <p>工单关闭不等于故障已确认；证据不会自动作为训练标签。</p>
+                      <a href={`/api/maintenance/orders/${order.id}/evidence`} target="_blank" rel="noreferrer">打开完整 JSON 证据</a>
+                    </div>
+                  )}
                   <form
                     key={`${order.id}/${order.revision}`}
                     className="editor"

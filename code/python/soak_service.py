@@ -20,7 +20,6 @@ import numpy as np
 from phm_core.artifacts import run_path
 from phm_runtime.store import StateStore
 from phm_runtime.observability import storage_snapshot
-from phm_runtime.resources import resident_bytes
 from service_process import start_service, stop_service
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -121,8 +120,17 @@ def run(seconds, interval, port):
             metrics["max_wal_bytes"] = max(
                 metrics["max_wal_bytes"], metrics["storage"]["wal_bytes"]
             )
-        if server is not None and server.poll() is None:
-            rss = resident_bytes(server.pid)
+        if (
+            server is not None
+            and server.poll() is None
+            and metrics["requests"] % 10 == 0
+        ):
+            try:
+                process = request(url + "/api/runtime/monitor", timeout=2)["process"]
+                rss = process["resident_bytes"]
+                metrics["api_process_id"] = process["pid"]
+            except (OSError, ValueError, KeyError):
+                rss = None
             metrics["server_rss_bytes"] = rss
             if rss is not None:
                 metrics["max_server_rss_bytes"] = max(

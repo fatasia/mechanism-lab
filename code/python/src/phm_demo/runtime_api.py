@@ -1,6 +1,7 @@
 """独立推理、持久告警、版本激活/回退和质量/漂移工具。"""
 
 from datetime import UTC, datetime
+import os
 from typing import Literal
 
 from fastapi import APIRouter, Query, Request
@@ -13,6 +14,7 @@ from phm_demo.services import execute, model_registry, state_store
 from phm_runtime.outbox import Outbox
 from phm_runtime.observability import storage_snapshot
 from phm_runtime.registry import promotion_gate
+from phm_runtime.resources import resident_bytes
 
 router = APIRouter(prefix="/api/runtime")
 Task = Literal["valve", "cooler", "pump", "accumulator"]
@@ -82,6 +84,7 @@ def monitor(request: Request):
         "http": request.app.state.request_metrics.snapshot(),
         "storage": storage_snapshot(store.path),
         "notification_counts": queue,
+        "process": {"pid": os.getpid(), "resident_bytes": resident_bytes(os.getpid())},
         "scope": "single process; bounded latency window; no site acceptance",
     }
 
