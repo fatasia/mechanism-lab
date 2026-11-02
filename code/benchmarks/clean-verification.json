@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "git_commit": "83f9480314146beb9ad251ae834c11a35d8bab8a",
+  "git_commit": "07d783c433b35c9d3b41480f6b3ebd83420d7089",
   "scope": "clean code/data/artifacts; reused installed dependencies, not clean OS installation; two-epoch smoke NOT model performance",
   "replay_windows": 2205,
   "restored_predictions": 2,
@@ -9,7 +9,7 @@
   "http_requests": 5,
   "query_not_logged": true,
   "module_origins_inside_clone": true,
-  "python_tests_passed": 206,
+  "python_tests_passed": 207,
   "date": "2026-11-02",
   "steps": [
     "module-origin",
