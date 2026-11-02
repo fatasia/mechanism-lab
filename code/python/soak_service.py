@@ -1,6 +1,7 @@
 """隔离HTTP服务长稳与恢复演练；报告持续写入，不把启动当成通过。"""
 
 import argparse
+import math
 import hashlib
 import json
 import os
@@ -9,6 +10,7 @@ import sqlite3
 import sys
 import time
 import urllib.request
+from collections import deque
 from datetime import UTC, datetime
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
@@ -17,6 +19,7 @@ import numpy as np
 
 from phm_core.artifacts import run_path
 from phm_runtime.store import StateStore
+from phm_runtime.observability import storage_snapshot
 from service_process import start_service, stop_service
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -84,7 +87,12 @@ def run(seconds, interval, port):
         "scope": "single client loopback HTTP, real valve ONNX, isolated SQLite; not site operation or memory acceptance",
     }
     started = time.monotonic()
-    latencies = []
+    latencies = deque(maxlen=10000)
+    metrics["latency_scope"] = (
+        "last 10000 requests; bounded reservoir, not lifetime percentile"
+    )
+    metrics["max_wal_bytes"] = 0
+    metrics["max_backup_bytes"] = 0
     log = (out / "server.log").open("ab")
     server = None
 
@@ -107,6 +115,11 @@ def run(seconds, interval, port):
 
     def save():
         metrics["elapsed_seconds"] = time.monotonic() - started
+        if database.exists():
+            metrics["storage"] = storage_snapshot(database)
+            metrics["max_wal_bytes"] = max(
+                metrics["max_wal_bytes"], metrics["storage"]["wal_bytes"]
+            )
         if latencies:
             metrics["latency_ms"] = {
                 f"p{p}": float(np.percentile(latencies, p)) for p in (50, 95, 99)
@@ -152,11 +165,16 @@ def run(seconds, interval, port):
                     for name, digest in source_hashes.items()
                 ):
                     raise RuntimeError("测试源码发生变化，停止本轮验收")
+                recovery_started = time.monotonic()
                 stop_service(server)
                 server = start()
                 if not request(url + "/api/runtime/predict", payload)["duplicate"]:
                     raise AssertionError("重启后状态丢失")
                 metrics["restarts"] += 1
+                metrics["max_restart_seconds"] = max(
+                    metrics.get("max_restart_seconds", 0),
+                    time.monotonic() - recovery_started,
+                )
                 backup = out / "restore-latest.sqlite"
                 StateStore(database).backup(backup)
                 with sqlite3.connect(backup) as db:
@@ -166,6 +184,14 @@ def run(seconds, interval, port):
                         == metrics["requests"]
                     )
                 metrics["restores"] += 1
+                metrics["max_backup_bytes"] = max(
+                    metrics["max_backup_bytes"], backup.stat().st_size
+                )
+                if (
+                    backup.with_name(backup.name + "-wal").exists()
+                    and backup.with_name(backup.name + "-wal").stat().st_size
+                ):
+                    raise AssertionError("备份仍依赖WAL sidecar")
             save()
             time.sleep(max(0, min(interval, seconds - (time.monotonic() - started))))
         if metrics["status"] == "running":
@@ -187,6 +213,10 @@ if __name__ == "__main__":
     parser.add_argument("--interval", type=float, default=0.1)
     parser.add_argument("--port", type=int, default=8767)
     args = parser.parse_args()
-    if args.seconds <= 0 or args.interval < 0:
+    if (
+        not all(math.isfinite(v) for v in (args.seconds, args.interval))
+        or args.seconds <= 0
+        or args.interval < 0
+    ):
         parser.error("seconds须为正，interval不可负")
     run(args.seconds, args.interval, args.port)

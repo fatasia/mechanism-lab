@@ -106,7 +106,12 @@ class ModelRegistry:
             if manifest.get("bundleKind") != "valve-fusion-runtime":
                 raise ValueError("未知的阀门运行包种类")
         trusted_key = os.environ.get("MECHANISM_TRUSTED_MODEL_KEY")
-        if trusted_key:
+        trusted_keys = os.environ.get("MECHANISM_TRUSTED_MODEL_KEYS")
+        if trusted_keys is not None:
+            from phm_core.signing import verify_trust_set
+
+            verify_trust_set(directory, json.loads(trusted_keys))
+        elif trusted_key:
             from phm_core.signing import verify_directory
 
             verify_directory(directory, Path(trusted_key))

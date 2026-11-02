@@ -69,7 +69,9 @@ def rejection_metrics(y, predicted, accepted):
     }
 
 
-def compare(x, y, contexts, train, calibration, target, references=None):
+def compare(
+    x, y, contexts, train, calibration, target, references=None, infer_context=False
+):
     if set(train) & set(calibration) or set(target) & (set(train) | set(calibration)):
         raise ValueError("完整记录分区重叠")
     if references is not None and set(references) & (
@@ -77,7 +79,27 @@ def compare(x, y, contexts, train, calibration, target, references=None):
     ):
         raise ValueError("投运参考与评分分区重叠")
     transformed = x.copy()
-    if references is not None:
+    context_accuracy = None
+    if infer_context:
+        if references is None:
+            raise ValueError("推断工况实验要求显式投运健康参考")
+        healthy = np.r_[train[y[train] == 0], references]
+        names = np.unique(contexts[healthy])
+        centers = np.array(
+            [np.median(x[healthy[contexts[healthy] == c]], axis=0) for c in names]
+        )
+        raw_scaler = RobustScaler().fit(x[train])
+        prototype_model = NearestNeighbors(n_neighbors=1).fit(
+            raw_scaler.transform(centers)
+        )
+        assigned = prototype_model.kneighbors(
+            raw_scaler.transform(x), return_distance=False
+        )[:, 0]
+        transformed = x - centers[assigned]
+        context_accuracy = float(np.mean(names[assigned[target]] == contexts[target]))
+        # 不用目标真实工况选择基准；白名单检查推断工况，距离门控另行报告。
+        contexts = names[assigned]
+    elif references is not None:
         for context in np.unique(contexts):
             ids = (
                 np.asarray(references)
@@ -145,11 +167,12 @@ def compare(x, y, contexts, train, calibration, target, references=None):
         "calibration_ids": calibration.tolist(),
         "test_ids": target.tolist(),
         "reference_ids": [] if references is None else references.tolist(),
+        "inferred_context_accuracy": context_accuracy,
         "results": rows,
     }
 
 
-def run(directory):
+def run(directory, infer_context=False):
     directory = directory.resolve()
     run_id, out = new_run(ROOT / "outputs", "condition-rejection")
     (out / "protocol.json").write_text(json.dumps(PROTOCOL, indent=2))
@@ -177,6 +200,17 @@ def run(directory):
                 x, y, context, train, calibration, target, references
             ),
         }
+        if infer_context:
+            cases["actuator/" + name]["inferred_context_two_references"] = compare(
+                x,
+                y,
+                context,
+                train,
+                calibration,
+                target,
+                references,
+                infer_context=True,
+            )
     manifest = json.loads((directory / "manifest.json").read_text())
     motor = []
     for record in manifest["records"]:
@@ -208,6 +242,7 @@ def run(directory):
     report = {
         "run_id": run_id,
         "protocol": PROTOCOL,
+        "inferred_context_experiment": infer_context,
         "cases": cases,
         "source_hash": capture_source(
             ROOT / "code/python", out / "source.zip", Path(__file__).name
@@ -225,4 +260,6 @@ def run(directory):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--motor-features", type=Path, required=True)
-    run(parser.parse_args().motor_features)
+    parser.add_argument("--infer-context", action="store_true")
+    args = parser.parse_args()
+    run(args.motor_features, args.infer_context)

@@ -165,6 +165,54 @@ class MaintenanceStore:
                 {"from": row["status"], "to": status, "operator": operator},
             )
 
+    def evidence(self, order_id):
+        """只读证据包：按实际事件实体/模型版本取数，不把关闭工单等同故障真值。"""
+        with self.store.connect() as db:
+            row = db.execute(
+                "SELECT * FROM work_orders WHERE id=?", (order_id,)
+            ).fetchone()
+            if row is None:
+                raise ValueError("工单不存在")
+            order = dict(row)
+            event = db.execute(
+                "SELECT * FROM events WHERE id=?", (row["event_id"],)
+            ).fetchone()
+            predictions = []
+            total = 0
+            if event:
+                end = event["end"]
+                parameters = (
+                    event["entity"],
+                    event["version"],
+                    max(0, event["start"] - 10),
+                    end,
+                )
+                condition = "entity=? AND version=? AND sequence>=? AND (? IS NULL OR sequence<=?)"
+                parameters = (*parameters, end)
+                total = db.execute(
+                    "SELECT count(*) FROM predictions WHERE " + condition, parameters
+                ).fetchone()[0]
+                predictions = [
+                    json.loads(r[0])
+                    for r in db.execute(
+                        "SELECT result FROM predictions WHERE "
+                        + condition
+                        + " ORDER BY sequence LIMIT 1000",
+                        parameters,
+                    )
+                ]
+            return {
+                "order": order,
+                "event": dict(event) if event else None,
+                "predictions": predictions,
+                "prediction_total": total,
+                "truncated": total > len(predictions),
+                "training_label_status": "not_exported_requires_independent_review",
+                "asset_event_identity_matches": None
+                if not event
+                else order["asset_id"] == event["entity"],
+            }
+
     def part(self, part_id, name):
         with self.store.connect() as db:
             db.execute(

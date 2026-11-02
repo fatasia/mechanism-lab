@@ -8,6 +8,23 @@ from pathlib import Path
 SIGNATURE = "signature.json"
 
 
+def verify_trust_set(directory: Path, keys):
+    """有界公钥轮换集合；全部不匹配时拒绝，空集合不代表关闭验证。"""
+    if (
+        not isinstance(keys, list)
+        or not 1 <= len(keys) <= 8
+        or any(not isinstance(k, str) or not k for k in keys)
+    ):
+        raise ValueError("信任集合必须包含1至8个公钥路径")
+    for key in keys:
+        try:
+            verify_directory(directory, Path(key))
+            return
+        except ValueError:
+            continue
+    raise ValueError("模型签名不属于当前信任集合")
+
+
 def inventory(directory: Path):
     directory = directory.resolve()
     files = {}

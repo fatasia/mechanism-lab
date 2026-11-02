@@ -4,12 +4,22 @@ from datetime import date
 from typing import Literal
 from uuid import UUID
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field
 
 from phm_demo.services import execute, maintenance_store
+from phm_demo.repository import ROOT
+from phm_runtime.knowledge import search
 
 router = APIRouter(prefix="/api/maintenance")
+
+
+@router.get("/knowledge")
+def knowledge(q: str = Query(min_length=1, max_length=200)):
+    return {
+        "scope": "public project operations documents, not equipment diagnosis",
+        "results": search(ROOT / "code", q),
+    }
 
 
 class Asset(BaseModel):
@@ -98,6 +108,11 @@ def create_order(body: Order):
 def transition(order_id: int, body: Transition):
     execute(maintenance_store().transition, order_id, **body.model_dump())
     return {"status": body.status}
+
+
+@router.get("/orders/{order_id}/evidence")
+def evidence(order_id: int):
+    return execute(maintenance_store().evidence, order_id)
 
 
 @router.put("/parts")

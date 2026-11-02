@@ -20,9 +20,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--blas-threads", type=int, default=1)
+    parser.add_argument("--ssl-certfile")
+    parser.add_argument("--ssl-keyfile")
     args = parser.parse_args()
+    if bool(args.ssl_certfile) != bool(args.ssl_keyfile):
+        parser.error("TLS证书和私钥必须同时提供")
     configure_threads(args.blas_threads)
     import uvicorn
 
     # 自带访问日志包含原始查询串；改用应用层固定字段JSON日志。
-    uvicorn.run("phm_demo.api:app", host="127.0.0.1", port=args.port, access_log=False)
+    uvicorn.run(
+        "phm_demo.api:app",
+        host="127.0.0.1",
+        port=args.port,
+        access_log=False,
+        ssl_certfile=args.ssl_certfile,
+        ssl_keyfile=args.ssl_keyfile,
+    )

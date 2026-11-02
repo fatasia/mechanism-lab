@@ -220,6 +220,21 @@ def run(destination):
             assert (
                 unsupported["status"] == "unscored" and supported["status"] == "scored"
             )
+            # 真实HTTP响应丢失：服务器已提交但适配器未确认，重启队列后幂等重发。
+            command(
+                "stream-retry",
+                [
+                    sys.executable,
+                    "-c",
+                    "import json,sys; from pathlib import Path; from urllib.request import Request,urlopen; from phm_runtime.streaming import WindowQueue; "
+                    "q=WindowQueue(Path(sys.argv[1])); body=json.loads(sys.argv[3]); q.put(body); "
+                    "send=lambda b: json.loads(urlopen(Request(sys.argv[2]+'/api/runtime/predict',data=json.dumps(b).encode(),headers={'Content-Type':'application/json'})).read()); "
+                    "send(body); q=WindowQueue(Path(sys.argv[1])); r=q.drain_one(send); assert r['duplicate']; assert q.snapshot()['pending']==0; print('persistent queue HTTP retry passed')",
+                    str(logs / "stream.sqlite"),
+                    url,
+                    json.dumps({**body, "sequence": 2}),
+                ],
+            )
             monitor = request("/api/runtime/monitor")
             command(
                 "backup",
@@ -244,7 +259,7 @@ def run(destination):
                     str(restored),
                 ],
             )
-            assert int(count) == 2
+            assert int(count) == 3
         finally:
             server.terminate()
             try:
