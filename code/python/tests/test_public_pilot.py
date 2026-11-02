@@ -263,3 +263,11 @@ def test_public_search_is_whitelisted_and_cited(tmp_path):
     assert "private-canary" not in json.dumps(result)
     assert result[0]["source_url"].startswith("https://github.com/fatasia/")
     assert search(tmp_path, "completelyunrelated") == []
+
+
+def test_resource_sampling_current_process():
+    import os
+    from phm_runtime.resources import resident_bytes
+
+    value = resident_bytes(os.getpid())
+    assert value is None or value > 0

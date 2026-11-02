@@ -20,6 +20,7 @@ import numpy as np
 from phm_core.artifacts import run_path
 from phm_runtime.store import StateStore
 from phm_runtime.observability import storage_snapshot
+from phm_runtime.resources import resident_bytes
 from service_process import start_service, stop_service
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -120,6 +121,13 @@ def run(seconds, interval, port):
             metrics["max_wal_bytes"] = max(
                 metrics["max_wal_bytes"], metrics["storage"]["wal_bytes"]
             )
+        if server is not None and server.poll() is None:
+            rss = resident_bytes(server.pid)
+            metrics["server_rss_bytes"] = rss
+            if rss is not None:
+                metrics["max_server_rss_bytes"] = max(
+                    metrics.get("max_server_rss_bytes", 0), rss
+                )
         if latencies:
             metrics["latency_ms"] = {
                 f"p{p}": float(np.percentile(latencies, p)) for p in (50, 95, 99)
@@ -148,6 +156,15 @@ def run(seconds, interval, port):
                 "units": manifest["units"],
                 "sample_rate_hz": manifest["sampleRateHz"],
             }
+            if manifest.get("sync", {}).get("required"):
+                # 工程回放的合成对齐元数据；不是现场命令边沿或同步精度证据。
+                payload["sync"] = {
+                    "command_edge_s": float(i * 60),
+                    "window_start_s": float(
+                        i * 60 + manifest["sync"]["expected_lead_s"]
+                    ),
+                    "channel_skew_s": 0.0,
+                }
             tick = time.perf_counter()
             result = request(url + "/api/runtime/predict", payload)
             if result["status"] != "scored" or result["duplicate"]:
