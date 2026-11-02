@@ -1,0 +1,22 @@
+{
+  "source_commit": "b32201503324a29fa9bdd66ebfe5ae02b33d5886",
+  "run_id": "http-soak-20261102T143230099988",
+  "status_at_publication": "running_not_passed",
+  "started_utc": "2026-11-02T14:32:30.121227+00:00",
+  "started_china": "2026-11-02T22:32:30.121227+08:00",
+  "earliest_finish_china": "2026-11-03T06:32:30.121227+08:00",
+  "required_seconds": 28800,
+  "interval_seconds": 2,
+  "restart_and_backup_every_windows": 100,
+  "scope": "single client loopback HTTP, real valve ONNX, isolated SQLite; not site operation or memory acceptance",
+  "model_scope": "two-epoch engineering smoke model; synthetic aligned sync metadata; not field predictive performance",
+  "previous_72h": {
+    "status": "cancelled_by_user_request",
+    "requests": 4837,
+    "restarts": 48,
+    "restores": 48,
+    "elapsed_seconds": 10217.937,
+    "time_not_carried_into_8h": true
+  },
+  "note": "Static launch receipt, not a live monitor or passed result; local progress.json is authoritative only when checked with process liveness."
+}

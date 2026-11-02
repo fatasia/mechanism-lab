@@ -45,14 +45,20 @@
     "scope": "Windows Python3.12 clean dependency installation; Ubuntu Node24 frontend build"
   },
   "long_soak": {
-    "status_at_publication": "running_not_passed",
+    "status_at_publication": "cancelled_by_user_request",
     "required_hours": 72,
     "started_utc": "2026-11-02T11:41:50.910159+00:00",
     "source_commit": "56baa7eb7fdbf878a760bef92f7b7484367c99f2",
-    "note": "static publication snapshot, consult local progress and process state; no automatic cloud monitor"
+    "note": "static publication snapshot, consult local progress and process state; no automatic cloud monitor",
+    "elapsed_seconds_before_cancel": 10217.937,
+    "superseded_by": "soak-8h.json"
   },
   "known_warnings": [
     "Starlette/httpx TestClient deprecation",
     "GitHub Actions older Node20 action runtime migrated by runner to Node24"
-  ]
+  ],
+  "eight_hour_soak": {
+    "receipt": "soak-8h.json",
+    "status_at_publication": "running_not_passed"
+  }
 }
