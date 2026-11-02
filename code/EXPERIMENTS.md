@@ -95,6 +95,8 @@ RF研究包导出：
 
 ## 检查与适用范围
 
+新增事件口径、拒识、CARE 与极片实验见[公开数据补强](PUBLIC_BENCHMARKS.md)。完整参数网格在 [benchmarks](benchmarks/README.md)，不下载数据也可检查汇总结论。
+
 ```powershell
 & $py -m pytest code/python/tests -q
 cd code/ts/demo

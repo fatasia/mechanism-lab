@@ -38,3 +38,7 @@ h5py 3.16.0（BSD-3-Clause）：读取 HDF5 格式的研究数据，仅在 train
 直流伺服电机多传感器数据 — Marin Zhilevski、Danail Slavov、Nikolay Yordanov，DOI 10.17632/g28trvywnx（v13），CC BY 4.0（发布方元数据与 LICENSE.txt）。仅本地研究使用无反转电流和振动波形，不随源码包分发。
 
 PRONTO 多相流异构基准数据 — Anna Stief、Ruomu Tan、Yi Cao、James R. Ottewill，DOI 10.5281/zenodo.1341583，CC BY 4.0。使用时须引用 Stief 等，Journal of Process Control 79 (2019) 41–55，DOI 10.1016/j.jprocont.2019.04.009；项目受欧盟 Horizon 2020 Marie Skłodowska-Curie 资助（协议号 675215）。仅本地审计，压缩包不解压、不随源码包分发。
+
+CARE v6 — Christian Gück、Cyriana Roelofs（Fraunhofer IEE），Wind Turbine SCADA Data For Early Fault Detection，https://zenodo.org/records/15846963 ，CC BY-SA 4.0。原始数据不随源码分发；`benchmarks/care.json` 是选取 12 例后经独立特征处理、训练与自定义事件评价得到的衍生研究记录，按 CC BY-SA 4.0 发布，不适用 MIT。许可：https://creativecommons.org/licenses/by-sa/4.0/ 。使用和修改不表示数据作者背书。
+
+极片超声数据 v4 — Erdogan Guk、Hamidreza Farhadi Tolie、Mona Faraji Niri、James Marco（University of Warwick），DOI 10.17632/c62yn37d9h.4，CC BY 4.0。原始压延前后 JSON 不分发；本项目独立提取频谱摘要、按原始极片/工艺组合分组、进行厚度回归及配对误差统计，没有复制发布方分析代码。来源：https://data.mendeley.com/datasets/c62yn37d9h/4 ，许可：https://creativecommons.org/licenses/by/4.0/ 。

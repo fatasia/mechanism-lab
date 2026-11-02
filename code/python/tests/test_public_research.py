@@ -1,5 +1,6 @@
 import importlib.util
 import io
+import json
 import zipfile
 from pathlib import Path
 
@@ -7,6 +8,19 @@ import numpy as np
 import pytest
 
 SCRIPTS = Path(__file__).resolve().parents[1]
+
+
+def test_public_export_omits_raw_predictions(tmp_path, monkeypatch):
+    exporter = module("export_public_evidence", monkeypatch)
+    run = tmp_path / "run"
+    run.mkdir()
+    payload = {key: {} for key in exporter.FIELDS["electrode"]}
+    payload["predictions"] = [{"actual": 123, "sample": "private-row"}]
+    (run / "metrics.json").write_text(json.dumps(payload))
+    exporter.export("electrode", run, tmp_path / "public")
+    published = json.loads((tmp_path / "public/electrode.json").read_text())
+    assert "predictions" not in published
+    assert len(published["metrics_sha256"]) == 64
 
 
 def module(name, monkeypatch):

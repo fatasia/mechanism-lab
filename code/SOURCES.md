@@ -64,3 +64,10 @@
 
 Plant Dataset for StictionGPT v1：https://data.mendeley.com/datasets/dc9fp3nppf/1 ，DOI 10.17632/dc9fp3nppf.1，CC BY 4.0，作者Tianci Xue、Chao Shang。80份原始文本已核对发布方SHA-256；仅使用现场时序数据，不使用文件名Stick1或已有fs参数作为模型输入。论文 DOI 10.1016/j.conengprac.2025.106588 供任务定义参考，没有复制其模型或训练实现。
 
+## 公开数据补强
+
+- [Wind Turbine SCADA Data For Early Fault Detection，CARE v6](https://zenodo.org/records/15846963)：Christian Gück、Cyriana Roelofs，CC BY-SA 4.0。固定 12 例子集，自定义事件评估，不是官方 CARE 全量分数。选定 ZIP 成员校验 CRC 并记录 SHA-256，未核验完整归档 MD5。
+- [极片超声数据 v4](https://data.mendeley.com/datasets/c62yn37d9h/4)：Erdogan Guk、Hamidreza Farhadi Tolie、Mona Faraji Niri、James Marco，DOI 10.17632/c62yn37d9h.4，CC BY 4.0。96 份压延前后 JSON 逐文件核对发布方 SHA-256；研究厚度回归，不含设备故障真值。
+
+原始数据不进入仓库。衍生指标及处理说明见 [benchmarks](benchmarks/README.md)，其中 CARE 衍生记录保留 CC BY-SA 4.0。
+

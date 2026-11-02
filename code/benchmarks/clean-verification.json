@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "git_commit": "83f9480314146beb9ad251ae834c11a35d8bab8a",
+  "scope": "clean code/data/artifacts; reused installed dependencies, not clean OS installation; two-epoch smoke NOT model performance",
+  "replay_windows": 2205,
+  "restored_predictions": 2,
+  "sync_missing": "unscored",
+  "sync_aligned": "scored",
+  "http_requests": 5,
+  "query_not_logged": true,
+  "module_origins_inside_clone": true,
+  "python_tests_passed": 206,
+  "date": "2026-11-02",
+  "steps": [
+    "module-origin",
+    "pytest",
+    "npm-ci",
+    "frontend-build",
+    "public-download",
+    "smoke-train",
+    "keygen",
+    "sign",
+    "verify-signature",
+    "http-replay-and-sync-gate",
+    "monitor",
+    "backup",
+    "restore-check",
+    "query-redaction"
+  ]
+}

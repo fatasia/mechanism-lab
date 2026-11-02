@@ -1,0 +1,306 @@
+{
+  "run_id": "20261102T094837Z-3eb6a03b",
+  "protocol": {
+    "version": 4,
+    "target": "Thickness_um",
+    "process_fields": [
+      "Web_speed",
+      "Calendering_Speed",
+      "Roll_Gap",
+      "Coat_Weight",
+      "Calendering_State"
+    ],
+    "forbidden_inputs": [
+      "Thickness",
+      "Density",
+      "Mass",
+      "Sample_ID"
+    ],
+    "protocols": [
+      "leave-original-electrode-out",
+      "leave-process-combination-out"
+    ],
+    "arms": [
+      "process_only",
+      "process_plus_spectrum"
+    ],
+    "models": [
+      "ridge_alpha1",
+      "rf200_leaf2_seed42"
+    ],
+    "selection": "all prespecified; no winning model selected from target results; materials evaluated separately",
+    "scope": "quality regression, not equipment PHM or failure lead time"
+  },
+  "results": [
+    {
+      "material": "GA",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_only",
+      "model": "ridge_alpha1",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 30,
+      "mae_um": 34.05348013273247,
+      "rmse_um": 42.37754572192333
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_only",
+      "model": "rf200_leaf2_seed42",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 30,
+      "mae_um": 38.078318081147245,
+      "rmse_um": 45.92055664486069
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_plus_spectrum",
+      "model": "ridge_alpha1",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 30,
+      "mae_um": 13.418225788885149,
+      "rmse_um": 19.178633918647773
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_plus_spectrum",
+      "model": "rf200_leaf2_seed42",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 30,
+      "mae_um": 8.958503582451506,
+      "rmse_um": 14.485302790401578
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_only",
+      "model": "ridge_alpha1",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 6,
+      "mae_um": 30.683230469554953,
+      "rmse_um": 39.465235938513025
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_only",
+      "model": "rf200_leaf2_seed42",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 6,
+      "mae_um": 30.991950465352552,
+      "rmse_um": 39.22649569910416
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_plus_spectrum",
+      "model": "ridge_alpha1",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 6,
+      "mae_um": 12.858155134725274,
+      "rmse_um": 18.087149049269183
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_plus_spectrum",
+      "model": "rf200_leaf2_seed42",
+      "records": 60,
+      "electrodes": 30,
+      "groups": 6,
+      "mae_um": 9.54628321909572,
+      "rmse_um": 14.533503355561637
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_only",
+      "model": "ridge_alpha1",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 3.977704981883398,
+      "rmse_um": 4.884025156250305
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_only",
+      "model": "rf200_leaf2_seed42",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 3.1898441742157058,
+      "rmse_um": 4.188341374047453
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_plus_spectrum",
+      "model": "ridge_alpha1",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 3.9786631942935253,
+      "rmse_um": 5.1445691317752305
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-original-electrode-out",
+      "arm": "process_plus_spectrum",
+      "model": "rf200_leaf2_seed42",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 5.854116236772488,
+      "rmse_um": 7.585916806779649
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_only",
+      "model": "ridge_alpha1",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 3.977704981883398,
+      "rmse_um": 4.884025156250305
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_only",
+      "model": "rf200_leaf2_seed42",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 3.1898441742157058,
+      "rmse_um": 4.188341374047453
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_plus_spectrum",
+      "model": "ridge_alpha1",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 3.9786631942935253,
+      "rmse_um": 5.1445691317752305
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-process-combination-out",
+      "arm": "process_plus_spectrum",
+      "model": "rf200_leaf2_seed42",
+      "records": 36,
+      "electrodes": 18,
+      "groups": 18,
+      "mae_um": 5.854116236772488,
+      "rmse_um": 7.585916806779649
+    }
+  ],
+  "paired_gains": [
+    {
+      "material": "GA",
+      "protocol": "leave-original-electrode-out",
+      "model": "ridge_alpha1",
+      "cluster_equal_weight_mae_gain_um": 20.635254343847315,
+      "bootstrap_interval_95": [
+        12.373220078912233,
+        29.29871706531784
+      ],
+      "independent_groups": 30
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-original-electrode-out",
+      "model": "rf200_leaf2_seed42",
+      "cluster_equal_weight_mae_gain_um": 29.11981449869574,
+      "bootstrap_interval_95": [
+        19.336225906554844,
+        38.79942128323257
+      ],
+      "independent_groups": 30
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-process-combination-out",
+      "model": "ridge_alpha1",
+      "cluster_equal_weight_mae_gain_um": 18.180773186066684,
+      "bootstrap_interval_95": [
+        13.209398400853097,
+        23.285350492305437
+      ],
+      "independent_groups": 6
+    },
+    {
+      "material": "GA",
+      "protocol": "leave-process-combination-out",
+      "model": "rf200_leaf2_seed42",
+      "cluster_equal_weight_mae_gain_um": 21.81128739550059,
+      "bootstrap_interval_95": [
+        17.00840090827383,
+        26.542336188811188
+      ],
+      "independent_groups": 6
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-original-electrode-out",
+      "model": "ridge_alpha1",
+      "cluster_equal_weight_mae_gain_um": -0.0009582124101275014,
+      "bootstrap_interval_95": [
+        -1.2419683618276112,
+        1.1167044608440775
+      ],
+      "independent_groups": 18
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-original-electrode-out",
+      "model": "rf200_leaf2_seed42",
+      "cluster_equal_weight_mae_gain_um": -2.6642720625567833,
+      "bootstrap_interval_95": [
+        -4.4241416550174435,
+        -1.2700452663206108
+      ],
+      "independent_groups": 18
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-process-combination-out",
+      "model": "ridge_alpha1",
+      "cluster_equal_weight_mae_gain_um": -0.0009582124101275014,
+      "bootstrap_interval_95": [
+        -1.3023542364541327,
+        1.1240675012763373
+      ],
+      "independent_groups": 18
+    },
+    {
+      "material": "NMC622",
+      "protocol": "leave-process-combination-out",
+      "model": "rf200_leaf2_seed42",
+      "cluster_equal_weight_mae_gain_um": -2.6642720625567833,
+      "bootstrap_interval_95": [
+        -4.461229788251226,
+        -1.1984486405473362
+      ],
+      "independent_groups": 18
+    }
+  ],
+  "source_manifest_sha256": "74c2e027bc58fcec080798a1ad7d13409990ef956a825a1c16d1e6aa89fe404d",
+  "source_hash": "afc1e97ae8b6bc9b196ae1267168dc77528d2659da4354e374b5b6dd85cece5d",
+  "limitations": "one laboratory; no equipment故障标签; recipe parameters may encode planned thickness; no production tolerance provided",
+  "metrics_sha256": "e9f0184c050c746394935c21d8113c6ba920a7b750aca439171754fbd103bafd"
+}
