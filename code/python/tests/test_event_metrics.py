@@ -43,3 +43,40 @@ def test_invalid_arguments_rejected():
         match_warnings([1], [2], 10, 5, 5, 1)
     with pytest.raises(ValueError):
         match_warnings([1], [2], 0, 72, 1, 1)
+
+
+@pytest.mark.parametrize(
+    "lead,hit,ambiguous",
+    [(0, 0, 1), (1.999, 0, 1), (2, 1, 0), (8, 1, 0), (8.001, 0, 0)],
+)
+def test_inclusive_boundaries_have_disjoint_episode_categories(lead, hit, ambiguous):
+    result = match_warnings([10], [10 + lead], 100, 8, 2, 0)
+    assert result["detected"] == hit
+    assert result["ambiguous_episodes"] == ambiguous
+    assert (
+        result["matched_episodes"]
+        + result["ambiguous_episodes"]
+        + result["false_episodes"]
+        == 1
+    )
+
+
+def test_zero_lead_and_invalid_inputs():
+    assert match_warnings([10], [10], 100, 8, 0, 0)["matched_episodes"] == 1
+    for kwargs in [
+        dict(warning_times=[float("nan")]),
+        dict(event_starts=[10, 10]),
+        dict(merge_gap_hours=-1),
+        dict(exposure_hours=float("inf")),
+    ]:
+        args = dict(
+            warning_times=[1],
+            event_starts=[10],
+            exposure_hours=100,
+            horizon_hours=8,
+            min_lead_hours=2,
+            merge_gap_hours=0,
+        )
+        args.update(kwargs)
+        with pytest.raises(ValueError):
+            match_warnings(**args)

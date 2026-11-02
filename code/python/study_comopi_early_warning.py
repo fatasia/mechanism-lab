@@ -101,15 +101,15 @@ def load_events():
     }
 
 
-def machine_scores(times, values):
+def machine_scores(times, values, protocol=PROTOCOL):
     """以机器自身最早的参考窗口做稳健标准化，再做按段重置的 EWMA。"""
-    ref = values[: PROTOCOL["reference_windows"]]
+    ref = values[: protocol["reference_windows"]]
     center = np.nanmedian(ref, axis=0)
     scale = np.maximum(
-        1.4826 * np.nanmedian(np.abs(ref - center), axis=0), PROTOCOL["mad_floor"]
+        1.4826 * np.nanmedian(np.abs(ref - center), axis=0), protocol["mad_floor"]
     )
-    z = np.clip(np.abs(values - center) / scale, 0, PROTOCOL["z_clip"])
-    valid = np.sum(~np.isnan(z), axis=1) >= PROTOCOL["min_valid_channels"]
+    z = np.clip(np.abs(values - center) / scale, 0, protocol["z_clip"])
+    valid = np.sum(~np.isnan(z), axis=1) >= protocol["min_valid_channels"]
     raw = np.where(
         valid,
         np.nanmean(np.where(np.isnan(z), 0, z), axis=1)
@@ -119,12 +119,12 @@ def machine_scores(times, values):
     )
     smooth = np.full(len(raw), np.nan)
     state = None
-    alpha = PROTOCOL["ewma_alpha"]
+    alpha = protocol["ewma_alpha"]
     for i, value in enumerate(raw):
         if np.isnan(value):
             state = None
             continue
-        broken = i > 0 and times[i] - times[i - 1] > PROTOCOL["segment_break_h"]
+        broken = i > 0 and times[i] - times[i - 1] > protocol["segment_break_h"]
         state = (
             value if state is None or broken else alpha * value + (1 - alpha) * state
         )
@@ -132,23 +132,32 @@ def machine_scores(times, values):
     return smooth
 
 
-def healthy_scores(times, scores, events):
+def healthy_scores(times, scores, events, protocol=PROTOCOL):
     """远离任何故障事件（前后 healthy_margin 内无事件）的参考期后得分。"""
-    margin = PROTOCOL["healthy_margin_h"]
-    keep = np.arange(len(times)) >= PROTOCOL["reference_windows"]
+    margin = protocol["healthy_margin_h"]
+    keep = np.arange(len(times)) >= protocol["reference_windows"]
     keep &= ~np.isnan(scores)
     for event in events:
         keep &= ~((times >= event - margin) & (times <= event + margin))
     return scores[keep]
 
 
-def chance_level(times_post, n_episodes, events, exposure, observed_detected, seed):
-    """同样数量的告警段随机落在有传感器数据的时刻，得到机会水平的召回。"""
+def chance_level(
+    times_post,
+    n_episodes,
+    events,
+    exposure,
+    observed_detected,
+    seed,
+    protocol=PROTOCOL,
+    draws=CHANCE_DRAWS,
+):
+    """抽取与实际告警段数等量的随机点再合并；记录实际合并段数，不冒充等段数对照。"""
     rng = np.random.default_rng(seed)
     if n_episodes == 0 or not events:
         return None
-    detected, false = [], []
-    for _ in range(CHANCE_DRAWS):
+    detected, false, counts = [], [], []
+    for _ in range(draws):
         picks = rng.choice(
             times_post, size=min(n_episodes, len(times_post)), replace=False
         )
@@ -156,15 +165,19 @@ def chance_level(times_post, n_episodes, events, exposure, observed_detected, se
             picks,
             events,
             exposure,
-            PROTOCOL["horizon_h"],
-            PROTOCOL["min_lead_h"],
-            PROTOCOL["warning_merge_gap_h"],
+            protocol["horizon_h"],
+            protocol["min_lead_h"],
+            protocol["warning_merge_gap_h"],
         )
         detected.append(result["detected"])
         false.append(result["false_episodes"])
+        counts.append(result["warning_episodes"])
     detected = np.array(detected)
     return {
-        "draws": CHANCE_DRAWS,
+        "draws": draws,
+        "null": "uniform observed-time points, then merge; not equal post-merge episode count",
+        "requested_points": n_episodes,
+        "mean_postmerge_episodes": float(np.mean(counts)),
         "mean_detected": float(detected.mean()),
         "mean_false_episodes": float(np.mean(false)),
         "p_chance_detects_at_least_observed": float(
@@ -173,27 +186,39 @@ def chance_level(times_post, n_episodes, events, exposure, observed_detected, se
     }
 
 
-def evaluate_target(serial, data, events, quantile):
+def evaluate_target(
+    serial,
+    data,
+    events,
+    quantile,
+    protocol=PROTOCOL,
+    scores=None,
+    chance_draws=CHANCE_DRAWS,
+):
     times, _ = data[serial]
-    scores = {s: machine_scores(*data[s]) for s in data}
+    scores = (
+        scores
+        if scores is not None
+        else {s: machine_scores(*data[s], protocol) for s in data}
+    )
     pool = np.concatenate(
         [
-            healthy_scores(data[s][0], scores[s], events.get(s, []))
+            healthy_scores(data[s][0], scores[s], events.get(s, []), protocol)
             for s in data
-            if s != serial and len(data[s][0]) > PROTOCOL["reference_windows"] + 144
+            if s != serial and len(data[s][0]) > protocol["reference_windows"] + 144
         ]
     )
     threshold = float(np.quantile(pool, quantile))
-    start = PROTOCOL["reference_windows"]
+    start = protocol["reference_windows"]
     post = np.arange(len(times)) >= start
     warn = times[post & ~np.isnan(scores[serial]) & (scores[serial] > threshold)]
     exposure = float(np.sum(post & ~np.isnan(scores[serial])) / 6)
     evaluable, excluded = [], []
     for event in events.get(serial, []):
-        prior = np.sum((times >= event - PROTOCOL["horizon_h"]) & (times < event))
+        prior = np.sum((times >= event - protocol["horizon_h"]) & (times < event))
         if event < times[start]:
             excluded.append({"time_h": event, "reason": "inside_reference_period"})
-        elif prior < PROTOCOL["min_prior_windows"]:
+        elif prior < protocol["min_prior_windows"]:
             excluded.append(
                 {"time_h": event, "reason": "insufficient_prior_sensor_data"}
             )
@@ -204,9 +229,9 @@ def evaluate_target(serial, data, events, quantile):
             warn,
             evaluable,
             exposure,
-            PROTOCOL["horizon_h"],
-            PROTOCOL["min_lead_h"],
-            PROTOCOL["warning_merge_gap_h"],
+            protocol["horizon_h"],
+            protocol["min_lead_h"],
+            protocol["warning_merge_gap_h"],
         )
         if exposure > 0
         else None
@@ -217,9 +242,9 @@ def evaluate_target(serial, data, events, quantile):
             [e for e in events.get(serial, []) if e >= times[start]],
             evaluable,
             exposure,
-            PROTOCOL["horizon_h"],
-            PROTOCOL["min_lead_h"],
-            PROTOCOL["warning_merge_gap_h"],
+            protocol["horizon_h"],
+            protocol["min_lead_h"],
+            protocol["warning_merge_gap_h"],
         )
         if exposure > 0
         else None
@@ -231,17 +256,28 @@ def evaluate_target(serial, data, events, quantile):
             evaluable,
             exposure,
             sensor_result["detected"],
-            PROTOCOL["chance_seed"] + int(quantile * 10000),
+            protocol["chance_seed"] + int(quantile * 10000),
+            protocol,
+            chance_draws,
         )
         if sensor_result
         else None
     )
     return {
+        "exposure_accounting": {
+            "confirmed_normal_hours": None,
+            "unknown_health_scored_hours": exposure,
+            "unscored_observed_hours": float(
+                np.sum(post & np.isnan(scores[serial])) / 6
+            ),
+            "post_reference_observed_hours": float(np.sum(post) / 6),
+            "denominator_kind": "observed_scored_not_confirmed_normal",
+        },
         "threshold": threshold,
         "evaluable_events": len(evaluable),
         "excluded_events": excluded,
         "sensor": sensor_result,
-        "chance_level_same_episode_count": chance,
+        "chance_level_requested_points": chance,
         "recent_fault_alarm_baseline": baseline,
     }
 
@@ -263,6 +299,8 @@ def pool(results, key):
         "false_episodes": false,
         "exposure_hours": hours_total,
         "false_episodes_per_1000h": false / hours_total * 1000 if hours_total else None,
+        "denominator_kind": "observed_scored_not_confirmed_normal",
+        "confirmed_normal_hours": None,
     }
 
 
@@ -292,9 +330,9 @@ def run():
             "per_machine": results,
             "pooled_sensor": pool(list(results.values()), "sensor"),
             "pooled_chance_expected_detected": sum(
-                r["chance_level_same_episode_count"]["mean_detected"]
+                r["chance_level_requested_points"]["mean_detected"]
                 for r in results.values()
-                if r["chance_level_same_episode_count"]
+                if r["chance_level_requested_points"]
             ),
             "pooled_recent_fault_alarm_baseline": pool(
                 list(results.values()), "recent_fault_alarm_baseline"
