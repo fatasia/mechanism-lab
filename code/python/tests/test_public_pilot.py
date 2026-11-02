@@ -271,3 +271,21 @@ def test_resource_sampling_current_process():
 
     value = resident_bytes(os.getpid())
     assert value is None or value > 0
+
+
+def test_backup_failure_preserves_previous_verified_snapshot(tmp_path, monkeypatch):
+    from phm_runtime.backups import create_backup
+
+    store = StateStore(tmp_path / "runtime.sqlite")
+    first = create_backup(store, tmp_path / "backups", keep=1)
+    old = Path(first["path"])
+    content = old.read_bytes()
+
+    def fail(destination):
+        raise OSError("injected disk full during backup")
+
+    monkeypatch.setattr(store, "backup", fail)
+    with pytest.raises(OSError):
+        create_backup(store, tmp_path / "backups", keep=1)
+    assert old.read_bytes() == content
+    assert old.with_suffix(".json").exists()

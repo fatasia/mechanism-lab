@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "git_commit": "d73d84cfe9786c4c7d7a458da4f6683a7a860aa7",
+  "scope": "clean code/data/artifacts; reused installed dependencies, not clean OS installation; two-epoch smoke NOT model performance",
+  "public_archive": "checksum-verified local cache, freshly prepared",
+  "replay_windows": 2205,
+  "restored_predictions": 3,
+  "restored_service_idempotency": true,
+  "sync_missing": "unscored",
+  "sync_aligned": "scored",
+  "http_requests": 7,
+  "query_not_logged": true,
+  "module_origins_inside_clone": true,
+  "clean_clone_tests": 219,
+  "latest_local_tests": 220,
+  "tls": {
+    "tls_handshake": "passed",
+    "hostname_and_ca_verified": true,
+    "certificate": "temporary test-only, removed",
+    "scope": "loopback TLS; not site PKI provisioning"
+  },
+  "short_soak": {
+    "status": "passed",
+    "required_seconds": 20.0,
+    "elapsed_seconds": 26.875,
+    "requests": 200,
+    "restarts": 2,
+    "restores": 2,
+    "max_restart_seconds": 7.436999999998079,
+    "max_wal_bytes": 0,
+    "max_backup_bytes": 159744,
+    "max_server_rss_bytes": 110612480
+  },
+  "ui": {
+    "test_fixture": true,
+    "desktop_and_800px_evidence_panel": "passed",
+    "json_link_visible": true,
+    "production_data_used": false
+  },
+  "ci": {
+    "url": "https://github.com/fatasia/mechanism-lab/actions/runs/41439833738",
+    "source_commit": "d73d84cfe9786c4c7d7a458da4f6683a7a860aa7",
+    "status": "success",
+    "tests": 219,
+    "scope": "Windows Python3.12 clean dependency installation; Ubuntu Node24 frontend build"
+  },
+  "long_soak": {
+    "status_at_publication": "running_not_passed",
+    "required_hours": 72,
+    "started_utc": "2026-11-02T11:41:50.910159+00:00",
+    "source_commit": "56baa7eb7fdbf878a760bef92f7b7484367c99f2",
+    "note": "static publication snapshot, consult local progress and process state; no automatic cloud monitor"
+  }
+}

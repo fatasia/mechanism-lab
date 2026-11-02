@@ -671,6 +671,10 @@
         1066.666666666686,
         447.66666666668607,
         526.0
+      ],
+      "recall_interval_95_assets_assuming_independence": [
+        0.14663279963467318,
+        0.9472550494736831
       ]
     },
     {
@@ -689,6 +693,10 @@
         1066.5,
         447.66666666668607,
         526.0
+      ],
+      "recall_interval_95_assets_assuming_independence": [
+        0.28358206388191054,
+        0.9949492366205319
       ]
     },
     {
@@ -704,6 +712,10 @@
       "p_bonferroni_three_methods": 1,
       "leads_h": [
         213.66666666668607
+      ],
+      "recall_interval_95_assets_assuming_independence": [
+        0.005050763379468061,
+        0.7164179361180895
       ]
     }
   ],
@@ -713,5 +725,6 @@
   "metrics_sha256": "c783443e38123dae67cded7dc6e75a8afb74e5cdd8a09341448e600703d30431",
   "license": "CC-BY-SA-4.0",
   "attribution": "Christian Gück, Cyriana Roelofs; https://zenodo.org/records/15846963; subset selection, feature processing and custom evaluation by Mechanism Lab",
-  "editorial_correction": "Original limitations text used a 12-asset placeholder; actual frozen set contains 9 assets. No metric changed."
+  "editorial_correction": "Original limitations text used a 12-asset placeholder; actual frozen set contains 9 assets. No metric changed.",
+  "interval_scope": "Descriptive exact binomial intervals added at export; asset independence assumed, shared-farm dependence not covered; not site acceptance."
 }

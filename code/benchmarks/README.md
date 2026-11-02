@@ -12,6 +12,7 @@
 | [care-holdout.json](care-holdout.json) | 9个未见资产，冻结协议与三个固定方法 |
 | [inferred-condition.json](inferred-condition.json) | 健康参考＋推断工况，三个种子及覆盖率 |
 | [electrode-uncertainty.json](electrode-uncertainty.json) | 极片消融、学习曲线、分组区间与拒识 |
+| [pilot-verification.json](pilot-verification.json) | 最新测试、CI、TLS、恢复库服务验证与长测启动状态 |
 
 解读和命令见[公开数据补强](../PUBLIC_BENCHMARKS.md)。研究指标由 `export_public_evidence.py` 导出；`metrics_sha256` 对应本地完整原报告，`source_hash` 对应该运行源码快照。原始数据和快照不随仓库分发。
 
