@@ -33,13 +33,21 @@ def test_api_contract():
     client = TestClient(app)
     assert client.get("/api/summary").status_code == 200
     assert client.get("/api/cycle/unknown/0").status_code == 422
-    assert client.get("/api/cycle/valve/0?channel=9").status_code == 422
+    assert client.get("/api/cycle/valve/0?channel=-1").status_code == 422
     assert client.get("/api/job").json()["status"] in [
         "idle",
         "running",
         "complete",
         "failed",
     ]
+
+
+def test_cycle_channel_contract_without_local_artifacts(tmp_path, monkeypatch):
+    from phm_demo import api
+
+    monkeypatch.setattr(api, "artifact", lambda *args: tmp_path / "metrics.json")
+    monkeypatch.setattr(api, "replay_data", lambda _: {"x": np.zeros((1, 10, 2))})
+    assert TestClient(app).get("/api/cycle/valve/0?channel=9").status_code == 422
 
 
 def test_tcn_no_future_leakage():
